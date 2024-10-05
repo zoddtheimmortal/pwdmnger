@@ -12,5 +12,9 @@ read_encrypted_file(){
 }
 
 write_encrypted_file(){
-    echo "$1" | openssl enc -$ENC_MODE -out $PASSWORD_FILE 2>/dev/null
+    # wut do here
+}
+
+search_query(){
+    read_encrypted_file | grep -i "$1" | awk -F, '{print "Username: " $2 "\nPassword: " $3}'
 }

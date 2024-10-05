@@ -18,11 +18,7 @@ while getopts ":vs:a:h" opt; do
             read_encrypted_file
             ;;
         s)
-            if grep -iq "$OPTARG" "$PASSWORD_FILE"; then
-                grep -i "$OPTARG" "$PASSWORD_FILE" | awk -F, '{print "Username: " $2 "\nPassword: " $3}'
-            else
-                echo "No match found"
-            fi
+            search_query "$OPTARG"
             ;;
         a)
             write_encrypted_file "$OPTARG"
