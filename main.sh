@@ -1,11 +1,13 @@
 #!/bin/bash
 
 source "$(dirname "$0")/bin/config.sh"
+source "$(dirname "$0")/bin/helpers.sh"
 
 usage(){
-    echo "Usage: $0 [-v] [-s query] [-a name uname password] [-h]"
+    echo "Usage: $0 [-v] [-s query] [-a name uname password] [-u old_pass new_pass] [-h]"
     echo "  -v: view all passwords"
     echo "  -s: search passwords"
+    echo "  -u: update master password"
     echo "  -a: append a new password"
     echo "  -h: help"
 }
@@ -13,7 +15,7 @@ usage(){
 while getopts ":vs:a:h" opt; do
     case $opt in
         v)
-            cat $PASSWORD_FILE
+            read_encrypted_file
             ;;
         s)
             if grep -iq "$OPTARG" "$PASSWORD_FILE"; then
@@ -23,7 +25,7 @@ while getopts ":vs:a:h" opt; do
             fi
             ;;
         a)
-            echo "$OPTARG" >> $PASSWORD_FILE
+            write_encrypted_file "$OPTARG"
             ;;
         h)
             usage
@@ -36,6 +38,10 @@ while getopts ":vs:a:h" opt; do
 done
 
 main(){
+    if ! ls -a "$PASSWORD_FILE" >/dev/null 2>&1; then
+        init_file
+    fi
+
     if [ $# -eq 0 ]; then
         usage
     fi
