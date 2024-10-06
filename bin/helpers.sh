@@ -12,7 +12,17 @@ read_encrypted_file(){
 }
 
 write_encrypted_file(){
-    # wut do here
+    read -sp "Enter encryption key: " encryption_key
+    echo
+
+    if ! existing_content=$(openssl enc -d -$ENC_MODE -in $PASSWORD_FILE -k "$encryption_key" 2>/dev/null); then
+        echo "Incorrect encryption key, try again"
+        return 1
+    fi
+
+    new_content="$existing_content"$'\n'"$1"
+
+    echo "$new_content" | openssl enc -$ENC_MODE -out $PASSWORD_FILE -k "$encryption_key" 2>/dev/null
 }
 
 search_query(){
