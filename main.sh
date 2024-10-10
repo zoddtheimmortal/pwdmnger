@@ -21,7 +21,16 @@ while getopts ":vs:a:h" opt; do
             search_query "$OPTARG"
             ;;
         a)
-            write_encrypted_file "$OPTARG"
+            shift $((OPTIND-2))
+            name=$1
+            uname=$2
+            passwd=$3
+            if [ -z "$name" ] || [ -z "$uname" ] || [ -z "$passwd" ]; then
+                echo "Error: Missing arguments for -a option"
+                usage
+                exit 1
+            fi
+            write_encrypted_file "$name,$uname,$passwd"
             ;;
         h)
             usage

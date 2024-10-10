@@ -20,7 +20,7 @@ write_encrypted_file(){
         return 1
     fi
 
-    new_content="$existing_content"$'\n'"$1"
+    new_content="$existing_content"'\n'"$1"
 
     echo "$new_content" | openssl enc -$ENC_MODE -out $PASSWORD_FILE -k "$encryption_key" 2>/dev/null
 }
